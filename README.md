@@ -1,6 +1,12 @@
 # EXPERIMENT--04-INTERFACING-A-SOIL-MOISTURE-SENSOR-AND-CONFIGURING-THE-OUTPUT-THROUGH-USART- USING IOT DEVELOPMENT BOARD 
-## Aim: To Interface a soil moisture sensor , configure  the ADC and transfer the data through serial port usign USART  
-## Components required: STM32 CUBE IDE, ARM IOT development board,  STM programmer tool, Serial port utility tool 
+## Aim:
+
+To Interface a soil moisture sensor , configure  the ADC and transfer the data through serial port usign USART  
+
+## Components required:
+
+STM32 CUBE IDE, ARM IOT development board,  STM programmer tool, Serial port utility tool 
+
 ## Theory 
 The full form of an ARM is an advanced reduced instruction set computer (RISC) machine, and it is a 32-bit processor architecture expanded by ARM holdings. The applications of an ARM processor include several microcontrollers as well as processors. The architecture of an ARM processor was licensed by many corporations for designing ARM processor-based SoC products and CPUs. This allows the corporations to manufacture their products using ARM architecture. Likewise, all main semiconductor companies will make ARM-based SOCs such as Samsung, Atmel, TI etc.
 ## Soil moisture sensor 
@@ -70,12 +76,43 @@ configure in the usart 2 as asynchronous mode and set the baud rate as 115200 as
 
 
 ## STM 32 CUBE PROGRAM :
+```
+#include "main.h"
+#include "stdio.h"
+#include "stdbool.h"
+#include "Soil Moisture Sensor.h"
+long int adc_val;
 
+#if defined(__ICCARM__) || defined (__ARMCC__VERSION)
+#define PUTCHAR_PROTOYPE int fputc(int ch,FILE *f)
+#elif defined(__GNUC__)
+#define PUTCHAR_PROTOTYPE int __io__putchar(int ch)
+#endif
 
-
+PUTCHAR_PROTOTYPE
+{
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
+  return ch;
+}
+int main(void)
+{
+  while (1)
+  {
+	  HAL_ADC_Start(&hadc);
+	  HAL_ADC_PollForConversion(&hadc,100);
+	  adc_val = HAL_ADC_GetValue(&hadc);
+	  HAL_ADC_Stop(&hadc);
+	  HAL_Delay(500);
+	  printf("ADC VALUE:%ld\n",adc_val);
+          HAL_Delay(500);
+  }
+}
+```
 ## Output screen shots of Serial port utility   :
- 
- 
+ ![image](https://github.com/yogeshrao05/-EXPERIMENT--03-INTERFACING-A-SOIL-MOISTURE-SENSOR-AND-CONFIGURING-THE-OUTPUT-THROUGH-USART--USING-/assets/122008288/76a813f8-feb0-4fb0-8c2b-29a78cfa261f)
+![image](https://github.com/yogeshrao05/-EXPERIMENT--03-INTERFACING-A-SOIL-MOISTURE-SENSOR-AND-CONFIGURING-THE-OUTPUT-THROUGH-USART--USING-/assets/122008288/8345e18d-12a0-4a0f-a431-1a3f55128d24)
+![image](https://github.com/yogeshrao05/-EXPERIMENT--03-INTERFACING-A-SOIL-MOISTURE-SENSOR-AND-CONFIGURING-THE-OUTPUT-THROUGH-USART--USING-/assets/122008288/c2253da4-487a-4d06-8a97-c1c19ea79df2)
+
  
  
 ## Result :
